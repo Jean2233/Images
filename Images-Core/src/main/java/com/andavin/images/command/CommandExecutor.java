@@ -53,16 +53,12 @@ final class CommandExecutor extends org.bukkit.command.Command {
             }
 
             if (!cmd.hasPermission(sender, args)) {
-                sender.sendMessage("§cInsufficient permission.");
+                sender.sendMessage("§cEste comando é exclusivo para jogadores do grupo Admin ou superior.");
                 return true;
             }
 
             if (args.length < cmd.getMinimumArgs()) {
-                sender.sendMessage(" §c§m----------------------------------------------------");
-                sender.sendMessage(centerMessage("§cNot enough arguments!"));
-                sender.sendMessage(centerMessage("§7Try §c" + cmd.getUsage()));
-                sender.sendMessage(centerMessage("§e" + cmd.getDescription()));
-                sender.sendMessage(" §c§m----------------------------------------------------");
+                sender.sendMessage("§cUtilize " + cmd.getUsage() + ".");
                 return true;
             }
 

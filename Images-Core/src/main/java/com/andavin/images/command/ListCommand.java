@@ -44,25 +44,31 @@ final class ListCommand extends BaseCommand {
         super("list", "images.command.list");
         this.setAliases("options");
         this.setUsage("/image list");
-        this.setDesc("Show a list of the options of images that can be added");
+        this.setDesc("Liste todas as imagens");
     }
 
     @Override
     public void execute(Player player, String label, String[] args) {
-
-        player.sendMessage("§a§lImage Options");
         List<File> images = Images.getImageFiles();
         if (images.isEmpty()) {
-            player.sendMessage("§cNo images available");
+            player.sendMessage("§cNenhuma imagem disponível.");
             return;
         }
 
+        player.sendMessage(new String[] {
+          "",
+          "§b§l Imagens §8▪ §fImagens disponíveis",
+          ""
+        });
+
         for (File image : images) {
             String name = image.getName();
-            player.spigot().sendMessage(new ComponentBuilder(" - ").color(ChatColor.GRAY).append(name).color(ChatColor.YELLOW)
+            player.spigot().sendMessage(new ComponentBuilder("§7 ▪ §f").append(name)
                     .event(new ClickEvent(Action.RUN_COMMAND, "/image create " + name))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to create ")
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Clique para criar ")
                             .color(ChatColor.GREEN).append(name).color(ChatColor.YELLOW).bold(true).create())).create());
         }
+
+        player.sendMessage("");
     }
 }

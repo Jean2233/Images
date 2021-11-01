@@ -40,7 +40,7 @@ public class ImageCommand extends BaseCommand {
     ImageCommand() {
         super("image", "images.command.manage");
         this.setAliases("customimage", "images", "img");
-        this.setDesc("Manage custom images.");
+        this.setDesc("Gerencie as imagens customizadas");
         this.setUsage("/image [create|delete|list|import|transfer]");
         this.addChild(new CreateCommand());
         this.addChild(new DeleteCommand());
@@ -55,14 +55,21 @@ public class ImageCommand extends BaseCommand {
     public void execute(Player player, String label, String[] args) {
 
         if (args.length != 0) {
-            player.sendMessage("§cUnknown command§f " + args[0]);
+            player.sendMessage("§cArgumento '" + args[0] + "' inválido.");
+            return;
         }
 
+        player.sendMessage(new String[] {
+          "",
+          "§b§l Imagens §8▪ §fComandos disponíveis",
+          ""
+        });
         for (BaseCommand command : new HashSet<>(this.getChildren().values())) {
-            player.spigot().sendMessage(new ComponentBuilder("§e§l" + command.getUsage())
+            player.spigot().sendMessage(new ComponentBuilder("§7 ▪ §f" + command.getUsage())
                     .event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(
-                            "§a" + command.getDescription()).create()))
+                            "§7" + command.getDescription()).create()))
                     .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command.getUsage())).create());
         }
+        player.sendMessage("");
     }
 }

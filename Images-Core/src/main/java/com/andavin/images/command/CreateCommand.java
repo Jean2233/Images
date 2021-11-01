@@ -70,7 +70,7 @@ final class CreateCommand extends BaseCommand implements Listener {
         this.setAliases("new", "add", "load");
         this.setMinimumArgs(1);
         this.setUsage("/image create <image name> [scale percent]");
-        this.setDesc("Create and begin pasting a new custom image");
+        this.setDesc("Crie e cole uma nova imagem");
         Bukkit.getPluginManager().registerEvents(this, Images.getInstance());
     }
 
@@ -104,12 +104,12 @@ final class CreateCommand extends BaseCommand implements Listener {
             try {
                 scale = Double.parseDouble(args[1]) / 100;
             } catch (NumberFormatException e) {
-                player.sendMessage("§cInvalid scale §f" + args[1]);
+                player.sendMessage("§cEscala " + args[1] + " inválida.");
                 return;
             }
 
             if (scale < 0.01) {
-                player.sendMessage("§cScale must be more than 1%, but got §f" + scale * 100 + '%');
+                player.sendMessage("§cA escala deve ser maior que 1%, porém obteve " + (scale * 100) + "%.");
                 return;
             }
         } else {
@@ -119,7 +119,7 @@ final class CreateCommand extends BaseCommand implements Listener {
         UUID id = player.getUniqueId();
         this.creating.put(id, new CreateImageTask(scale, imageSupplier, nameSupplier));
         Scheduler.repeatAsyncWhile(() -> ActionBarUtil.sendActionBar(player,
-                "§eRight Click to place§7 - §eLeft Click to cancel"),
+                "§fBotão direito: §7confirmar §8▪ §fBotão esquerdo: §7cancelar"),
                 5L, 20L, () -> this.creating.containsKey(id));
     }
 
@@ -185,17 +185,17 @@ final class CreateCommand extends BaseCommand implements Listener {
                         case UP:
                         case DOWN:
                         case SELF:
-                            player.sendMessage("§cUnsupported direction!");
+                            player.sendMessage("§cDireção não suportada!");
                             return;
                     }
                 }
 
                 Scheduler.async(() -> {
 
-                    player.sendMessage("§aStarting image paste");
+                    player.sendMessage("§aCriando imagem...");
                     BufferedImage image = task.readImage();
                     if (image == null) {
-                        player.sendMessage("§cInvalid image file! Please choose another.");
+                        player.sendMessage("§cA imagem inserida é inválida!");
                         return;
                     }
 
@@ -203,9 +203,9 @@ final class CreateCommand extends BaseCommand implements Listener {
                             task.nameSupplier.get(), location, direction, image);
                     customImage.refresh(player, playerLocation);
                     if (Images.addImage(customImage)) {
-                        player.sendMessage("§aSuccessfully created image§f " + customImage.getImageName());
+                        player.sendMessage("§aImagem criada com êxito.");
                     } else {
-                        player.sendMessage("§cFailed to create image at that location");
+                        player.sendMessage("§cOcorreu um erro ao criar uma imagem neste local.");
                     }
                 });
 
@@ -213,7 +213,7 @@ final class CreateCommand extends BaseCommand implements Listener {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
                 event.setCancelled(true);
-                player.sendMessage("§cCreation cancelled");
+                player.sendMessage("§cAção cancelada com êxito.");
                 break;
         }
     }
@@ -223,7 +223,7 @@ final class CreateCommand extends BaseCommand implements Listener {
 
         Player player = event.getPlayer();
         if (this.creating.remove(player.getUniqueId()) != null) {
-            player.sendMessage("§cCreation cancelled");
+            player.sendMessage("§cAção cancelada com êxito.");
         }
     }
 

@@ -32,7 +32,7 @@ public final class TransferCommand extends BaseCommand {
         super("transfer", "images.command.transfer");
         this.setAliases("datatransfer");
         this.setMinimumArgs(1);
-        this.setDesc("Transition all data to a different configured database");
+        this.setDesc("Converta todos os dados para outro banco");
     }
 
     @Override
@@ -40,9 +40,12 @@ public final class TransferCommand extends BaseCommand {
 
         if (TimeoutMetadata.isExpired(player, KEY)) {
             player.setMetadata(KEY, new TimeoutMetadata(20, TimeUnit.SECONDS));
-            player.sendMessage("§cThis may overwrite any data in the " + args[0] + " database\n" +
-                    "§c§lThis will also stop the server");
-            player.sendMessage("§eRerun the command to confirm");
+            player.sendMessage(new String[] {
+              "",
+              "§a Tem certeza que deseja converter os dados?",
+              "§7 Digite o comando novamente para confirmar.",
+              ""
+            });
             return;
         }
 
@@ -53,7 +56,7 @@ public final class TransferCommand extends BaseCommand {
             case "MYSQL":
 
                 if (current instanceof MySQLDataManager) {
-                    player.sendMessage("§cAlready using MySQL. Please choose another...");
+                    player.sendMessage("§cO sistema já está utilizando o MySQL.");
                     return;
                 }
 
@@ -70,7 +73,7 @@ public final class TransferCommand extends BaseCommand {
             case "SQLITE":
 
                 if (current instanceof SQLiteDataManager) {
-                    player.sendMessage("§cAlready using SQLite. Please choose another...");
+                    player.sendMessage("§cO sistema já está utilizando o SQLite.");
                     return;
                 }
 
@@ -79,40 +82,35 @@ public final class TransferCommand extends BaseCommand {
             case "FILE":
 
                 if (current instanceof FileDataManager) {
-                    player.sendMessage("§cAlready using file data. Please choose another...");
+                    player.sendMessage("§cO sistema já está utilizando o Flat File.");
                     return;
                 }
 
                 to = new FileDataManager(new File(Images.getImagesDirectory(), "images.cimg"));
                 break;
             default:
-                player.sendMessage("§cUnknown database type §f" + args[0]);
-                player.sendMessage("§7Try MySQL or SQLite");
+                player.sendMessage("§cTipo de banco de dados inválido.");
                 return;
         }
 
         Scheduler.async(() -> {
 
-            player.sendMessage("§aInitializing new database...");
+            player.sendMessage("§aInicializando novo banco de dados...");
             to.initialize();
             List<CustomImage> images = Images.getMatchingImages(i -> true);
             images.forEach(image -> image.setId(-1)); // Reset the ID of the image so it can be reset
-            player.sendMessage("§aSaving §f" + images.size() + "§a to new database...");
+            player.sendMessage("§aSalvando " + images.size() + " imagens...");
             try {
                 to.saveAll(images);
-                player.sendMessage("§aSuccessfully transferred all images!");
-                player.sendMessage("§eYou may now change the database configuration\n" +
-                        "§eto the new database and restart your server");
+                player.sendMessage("§aTodas as imagens foram transferidas para o novo banco de dados!");
                 Logger.info("Successfully transferred all images to {}", type);
                 Logger.info("You may now change the database configuration to {}", type);
             } catch (Exception e) {
-                player.sendMessage("§cAn error occurred while transferring!");
-                player.sendMessage("§eIf you are using MySQL ensure that it is configured properly.");
-                player.sendMessage("§eOtherwise, contact the developer");
+                player.sendMessage("§cOcorreu um erro ao transferir os dados.");
                 Logger.severe(e);
             }
             // No matter what shutdown
-            player.sendMessage("§eShutting down in 5 seconds...");
+            player.sendMessage("§cO servidor será fechado em 5 segundos...");
             Scheduler.laterAsync(Bukkit::shutdown, 100);
         });
     }

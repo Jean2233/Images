@@ -18,7 +18,7 @@ final class DeleteNearCommand extends BaseCommand {
         this.setAliases("n");
         this.setMinimumArgs(1);
         this.setUsage("/image delete near <range>");
-        this.setDesc("Delete all images within a specified range");
+        this.setDesc("Remova todas as imagens em um raio");
     }
 
     @Override
@@ -28,19 +28,19 @@ final class DeleteNearCommand extends BaseCommand {
         try {
             range = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            player.sendMessage("§cInvalid range: §f" + args[0]);
+            player.sendMessage("§cO raio '" + args[0] + "' é inválido.");
             return;
         }
 
         if (range < 1) {
-            player.sendMessage("§cRange must be at least 1");
+            player.sendMessage("§cO raio deve ser maior ou igual a 1.");
             return;
         }
 
         Location location = player.getLocation();
         List<CustomImage> images = Images.getMatchingImages(image -> image.isInRange(location, range));
         if (images.isEmpty()) {
-            player.sendMessage("§cNo images found in range of §f" + range);
+            player.sendMessage("§cNenhuma imagem encontrada neste raio.");
             return;
         }
 
@@ -54,14 +54,14 @@ final class DeleteNearCommand extends BaseCommand {
         }
 
         if (success == images.size()) {
-            player.sendMessage("§aSuccessfully deleted §f" + success + "§a images within §f" + range + " blocks");
+            player.sendMessage("§aForam excluídas " + success + " imagens em " + range + " blocos.");
         } else {
 
-            player.sendMessage("§cFound §f" + images.size() + "§c nearby images");
+            player.sendMessage("§cForam encontradas " + images.size() + " imagens.");
             if (success > 0) {
-                player.sendMessage("§cbut only §f" + success + "§c were successfully deleted");
+                player.sendMessage("§cPorém, apenas " + success + " foram removidas.");
             } else {
-                player.sendMessage("§cbut there was an issue deleting them");
+                player.sendMessage("§cPorém, ocorreu um erro ao removê-las.");
             }
         }
     }

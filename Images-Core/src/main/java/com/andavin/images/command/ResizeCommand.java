@@ -33,7 +33,7 @@ public class ResizeCommand extends BaseCommand {
 
     ResizeCommand() {
         super("resize", "image.command.resize");
-        this.setDesc("Reset the size of an image to a scaled version");
+        this.setDesc("Redefina o tamanho de uma imagem");
         this.setUsage("/image resize <percent>");
     }
 

@@ -33,7 +33,7 @@ public class SizeCommand extends BaseCommand {
 
     SizeCommand() {
         super("size", "image.command.size");
-        this.setDesc("Show the size of an image");
+        this.setDesc("Visualize o tamanho de uma imagem");
         this.setUsage("/image size");
     }
 

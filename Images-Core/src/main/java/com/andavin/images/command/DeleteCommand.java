@@ -54,7 +54,7 @@ final class DeleteCommand extends BaseCommand implements Listener {
         super("delete", "images.command.delete");
         this.setAliases("del", "remove", "unload");
         this.setUsage("/image delete");
-        this.setDesc("Delete an existing image by clicking on it");
+        this.setDesc("Remova uma imagem existente clicando nela");
         this.addChild(new DeleteNearCommand());
         Bukkit.getPluginManager().registerEvents(this, Images.getInstance());
     }
@@ -71,9 +71,9 @@ final class DeleteCommand extends BaseCommand implements Listener {
         Scheduler.repeatAsyncWhile(() -> {
 
             if (MinecraftVersion.lessThan(v1_15)) {
-                ActionBarUtil.sendActionBar(player, "§eRight Click to delete§7 - §eLeft Click to cancel");
+                ActionBarUtil.sendActionBar(player, "§fBotão direito: §7confirmar §8▪ §fBotão esquerdo: §7cancelar");
             } else {
-                ActionBarUtil.sendActionBar(player, "§eRight Click to delete§7 - §eRerun Command to cancel");
+                ActionBarUtil.sendActionBar(player, "§fBotão direito: §7confirmar §8▪ §fExecute o comando: §7cancelar");
             }
         }, 5L, 20L, () -> this.deleting.contains(id));
 
@@ -84,7 +84,7 @@ final class DeleteCommand extends BaseCommand implements Listener {
 
                 if (!player.getUniqueId().equals(image.getCreator()) &&
                         !player.hasPermission("images.restricted.bypass")) {
-                    player.sendMessage("§cInsufficient permission to modify that image");
+                    player.sendMessage("§cVocê precisa do grupo Admin ou superior para fazer isto.");
                     return;
                 }
             }
@@ -95,9 +95,9 @@ final class DeleteCommand extends BaseCommand implements Listener {
 
                     if (this.deleting.remove(player.getUniqueId()) && Images.removeImage(image)) {
                         image.destroy();
-                        player.sendMessage("§aImage successfully deleted");
+                        player.sendMessage("§aImagem excluída com sucesso!");
                     } else {
-                        player.sendMessage("§cFailed to delete image");
+                        player.sendMessage("§cOcorreu um erro ao remover a imagem.");
                     }
                 });
             }
@@ -130,7 +130,7 @@ final class DeleteCommand extends BaseCommand implements Listener {
     private boolean cancel(Player player) {
 
         if (this.deleting.remove(player.getUniqueId())) {
-            player.sendMessage("§cDeletion cancelled");
+            player.sendMessage("§cAção cancelada com êxito.");
             return true;
         }
 

@@ -47,7 +47,7 @@ public class ImportCommand extends BaseCommand {
     ImportCommand() {
         super("import", "images.command.import");
         this.setAliases("legacyImport");
-        this.setDesc("Import and destroy all legacy images and create new ones in the new format");
+        this.setDesc("Importe e destrua imagens e as re-crie em um novo formato.");
         this.setUsage("/image import");
     }
 
@@ -55,12 +55,12 @@ public class ImportCommand extends BaseCommand {
     public void execute(Player player, String label, String[] args) {
 
         if (TimeoutMetadata.isExpired(player, CONFIRM_META)) {
-            player.sendMessage(
-                    "§eAre you sure you want to import legacy images?\n" +
-                            "§7This can not be undone unless you\n" +
-                            "§ctake a backup of your world folder.\n" +
-                            "§eRe-type the command to confirm"
-            );
+            player.sendMessage(new String[] {
+              "",
+              "§a Tem certeza que deseja importar as imagens?",
+              "§7 Digite o comando novamente para confirmar.",
+              ""
+            });
 
             player.setMetadata(CONFIRM_META, new TimeoutMetadata(15, TimeUnit.SECONDS));
             return;
@@ -68,18 +68,17 @@ public class ImportCommand extends BaseCommand {
 
         long now = System.currentTimeMillis();
         if (now - lastRun < COOLDOWN) {
-            player.sendMessage("§cPlease wait 5 minutes before running that again.");
+            player.sendMessage("§cAguarde 5 minutos para executar este comando novamente.");
             return;
         }
 
         lastRun = now;
-        player.sendMessage("§aImporting legacy images.\n" +
-                "§eThis will cause sever lag. Please wait...");
+        player.sendMessage("§aImportando imagens...");
         List<CustomImage> importedImages = LegacyImportManager.importImages(
                 Images.getImagesDirectory(), Images.getDataManager());
         Scheduler.async(() -> {
             Images.addImages(importedImages);
-            player.sendMessage("§aSuccessfully imported §f" + importedImages.size() + "§a images");
+            player.sendMessage("§aForam importadas " + importedImages.size() + " imagens!");
         });
     }
 }
