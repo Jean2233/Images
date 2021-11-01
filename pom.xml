@@ -11,16 +11,6 @@
         <module>Images-Core</module>
         <module>Images-Common</module>
         <module>Images-v1_8_R3</module>
-        <module>Images-v1_9_R2</module>
-        <module>Images-v1_10_R1</module>
-        <module>Images-v1_12_R1</module>
-        <module>Images-v1_13_R2</module>
-        <module>Images-v1_14_R1</module>
-        <module>Images-v1_11_R1</module>
-        <module>Images-v1_15_R1</module>
-        <module>Images-v1_16_R2</module>
-        <module>Images-v1_16_R3</module>
-        <module>Images-v1_17_R1</module>
     </modules>
     <packaging>pom</packaging>
 
